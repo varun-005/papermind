@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: papermind-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_API_BASE
+        value: https://openrouter.ai/api/v1
+      - key: DATABASE_URL
+        value: sqlite:///./pdf_qa.db
+    disk:
+      name: uploads
+      mountPath: /app/uploads
+      sizeGB: 1
+    autoDeploy: true
+    rootDir: backend
+
+  - type: web
+    name: papermind-frontend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: serve -s build
+    envVars:
+      - key: REACT_APP_API_URL
+        fromService:
+          name: papermind-backend
+          type: web
+          property: url
+    autoDeploy: true
+    rootDir: frontend

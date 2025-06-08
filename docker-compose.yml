@@ -6,7 +6,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENROUTER_API_BASE=${OPENROUTER_API_BASE}
       - DATABASE_URL=sqlite:///./pdf_qa.db
     volumes:
       - ./backend/uploads:/app/uploads
